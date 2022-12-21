@@ -1,0 +1,574 @@
+\usepackage{extsizes}
+%\documentclass{article}
+\documentclass[10pt]{extarticle}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=.75in]{geometry}
+\usepackage{enumitem}
+\usepackage{csquotes}
+\usepackage{listings}
+\usepackage{fancyhdr}
+\usepackage{courier}
+\usepackage{multicol}
+\usepackage{graphicx}
+\usepackage{makecell}
+\usepackage{multirow}
+\usepackage{forest}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathtools}
+\usepackage{tabularx}
+\usepackage{paralist}
+\usepackage{mdframed}
+\usepackage[compact]{titlesec}
+\titlespacing{\section}{0pt}{1ex}{1ex}
+\titlespacing{\subsection}{0pt}{1ex}{0ex}
+\titlespacing{\subsubsection}{0pt}{0.5ex}{0ex}
+
+\setlength{\abovedisplayskip}{1pt}
+\setlength{\belowdisplayskip}{1pt}
+\setlength\parindent{0pt}
+
+\renewcommand{\tt}{\ttfamily \small}
+\newcommand{\tabitem}{~~\llap{\textbullet}~~}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand*{\pd}[3][]{\ensuremath{\frac{\partial^{#1} #2}{\partial #3}}}
+
+% allow augmented matrices with [cc|c] for example
+\makeatletter
+\renewcommand*\env@matrix[1][*\c@MaxMatrixCols c]{%
+	\hskip -\arraycolsep
+	\let\@ifnextchar\new@ifnextchar
+	\array{#1}}
+\makeatother
+
+\lstset{
+        basicstyle=\ttfamily,
+        breaklines=true,
+        numbers=left,
+        language=python,
+        showstringspaces=false,
+        keywordstyle=\color{deepblue},
+        emphstyle=\color{deepred},    % Custom highlighting style
+        stringstyle=\color{deepgreen},
+    }
+\setcounter{tocdepth}{2}
+
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{Page \thepage}   
+\lhead{Ben Kettle}
+\fancyhead[C]{18.C06 Cheat Sheet}
+
+\begin{document}
+
+
+\begin{multicols*}{2}
+
+\section{Vectors}
+	\noindent\begin{tabular}{ccc}
+		Inner Product & Magnitude & Angle \\
+		\( \displaystyle \langle a, b \rangle = a^T b = \sum_{i=1}^{n} a_i b_i \) & 
+		\( \displaystyle \| v \|^2 = \langle v, v \rangle \) & 
+		\( \displaystyle \cos \theta = \frac{\langle v, w \rangle}{\| v\| \| w\|} \)
+	\end{tabular}
+
+\subsection{Linear Combination}
+A linear combination of vectors $\{v_1, \ldots, v_n\}$ is a sum $c_1 v_1 + \cdots + c_n v_n$, where each $c_i$ is a real number.
+
+
+% \subsection{Matrix-Vector Multiplication}
+% Given a matrix $A \in \R^{m \times n}$ and an $n \times 1$ vector $x \in \R^n$, the matrix-vector product $Ax$ is defined as $(Ax)_i = \sum_{j=1}^{m} A_{i, j}x_j$. We can interpret this as a way of expressing a linear combination of the columns of $A$---each entry in $x$ gives the coefficient for the corresponding column in $A$. It can also be interpreted directly following the formula, as a set of inner products with the rows of $A$.
+% 
+% Any linear function on vectors can be expressed as a matrix-vector product, i.e. for every linear function $f$ there exists some $A$ where $f(x) = Ax$. A function $f: \R^n \rightarrow \R^m$ is \emph{linear} if $f(\alpha x) = \alpha f(x)$ and $f(x + y) = f(x) + f(y)$ for all $\alpha, x, y$.
+% 
+% We will most often see equations of the form $Ax=b$. This equation has a solution $x$ if and only if $b$ can be expressedas a linear combination of columns of $A$. Similarly, $Ax = b$ has a solution for all $b$ iff the columns of A span all of $\R^m$, where the \emph{span} of vectors $v_1, \ldots$ is all the vectors that can be expressed as linear combinations of $v_1, \ldots$.
+
+\subsection{Linear Independence}
+Vectors are LI iff no vector in the set can be expressed as a linear combination of the other vectors. 
+%A useful equivalent definition is that vectors are LI if there is no nontrivial linear combination that yields the zero vector:
+Equivalently:
+\[ \text{LI iff}\quad \lambda_1 v_1 + \cdots + \lambda_k v_k = 0 \implies \lambda_1 = 0, \ldots, \lambda_k = 0 \]
+
+\section{Matrix Properties}
+A matrix $M \in \mathbb{R}^{m \times n}$ has $m$ rows and $n$ columns.
+
+\subsection{Matrix-Matrix Multiplication}
+
+\begin{compactitem}
+	\item $A(BC) = (AB)C$
+	\item $A(B + C) = AB + AC$, $(A+B)C = AC + AB$
+	\item	$AB \neq BA$ generally
+\end{compactitem}
+
+% \subsubsection{Counting Walks}
+% We can use matrix multiplication to count walks from one point to another in a graph. To do so, we first form an adjacency mtrix where each row and column represents a vertex and there is an edge at $(i, j)$ iff there is an edge from vertex $i$ to $j$. $A^l_{ij}$ gives the number of walks of length $l$ from vertex $i$ to vertex $j$.
+
+\subsection{Inverse}
+% A matrix $R$ is a right inverse of $A$ if $AR = I$. A matrix $L$ is a left inverse of $A$ if $LA = I$. If a matrix has both a left and a right inverse, they are necessarily identical, and we call the matrix \textit{invertible}. This is possible only for square matrices. If $A$ and $B$ are square invertible matrices, then $(AB)^{-1} = B^{-1}A^{-1}$ (we can see this by multiplying both sides by $AB$).
+$R$ is a right inverse if $AR=I$, $L$ is left inverse if $LA=I$. If $L$ \emph{and} $R$ exist, then $L=R=A^{-1}$ (and A is square).
+\begin{compactitem}
+\item For square invertable $A$ and $B$, $(AB)^{-1} = B^{-1} A^{-1}$. % (verify $AB B^{-1}A^{-1}$)
+	\item If $A$ is orthogonal then $A^{-1} = A^T$ (since $A^T A = I$).	
+\end{compactitem}
+
+To compute the inverse, use Gaussian Elimination to transform $[A\, I]$ to $[I\, B]$. Then $B = A^{-1}$.
+
+For a $2 \times 2$ matrix, $\begin{bsmallmatrix}a & b \\ c & d\end{bsmallmatrix}^{-1} = \frac{1}{ad - bc}\begin{bsmallmatrix}d & -b \\ -c & a\end{bsmallmatrix}$
+
+\subsection{Transpose}
+The \emph{transpose} of an $m \times n$ matrix $A$ is an $n \times m$ matrix $A^T$ where $(A^T)_{ij} = A {ji}$.
+% Pictorially, the top right element remains in place, the top edge becomes the left edge, and the left edge becomes the top edge.
+
+\begin{compactitem}
+	\item \( (AB)^T = B^T A^T \)
+	\item \( (A^T)^T = A \)
+	\item $ (A + B)^T = A^T + B^T $
+	\item For square and invertible $A$, $(A^{-1})^T = (A^T)^{-1} $
+\end{compactitem}
+
+\subsection{Rank}
+The rank of a matrix is given by:
+\begin{compactitem}
+\item The max number of L.I. columns ($= \dim C(A)$)
+\item The max number of L.I. rows ($= \dim C(A^T)$)
+\item The number of pivots in the RREF of A.
+\end{compactitem}
+
+\subsubsection{Rank-Nullity Theorem}
+For any $m \times n$ matrix $A$, $rank(A) + dim(N(A)) = n$.
+
+
+\section{Gaussian Elimination}
+%The goal in Gaussian Elimination is to find matrices $T$ and $R$ such that $TR = A$, $R$ is in row-echelon form, and $T$ is a product of \emph{elementary matrices} that represent a single row operation. Some examples (for each $T$ below, $TA$ will perform the specified operation):
+To solve a system $Ax=b$ (find $x$), we can perform row operations on the augmented matrix to simplify without changing the solution set.
+
+	\begin{tabular}{ccc}
+		Swap Rows 1 \& 2 & $r_1' = r_1 - r_2$ & $r_1' = 2*r_1$ \\
+		\( \begin{bmatrix}
+			0 & 1 & 0 \\
+			1 & 0 & 0 \\
+			0 & 0 & 1
+		\end{bmatrix} \) &
+		\( \begin{bmatrix}
+			1 & -1 & 0 \\
+			0 & 1 & 0 \\
+			0 & 0 & 1
+		\end{bmatrix} \) &
+		\( \begin{bmatrix}
+			2 & 0 & 0 \\
+			0 & 1 & 0 \\
+			0 & 0 & 1
+		\end{bmatrix} \)
+	\end{tabular}
+
+A matrix is in row-echelon form when all pivots (leftmost nonzero in a row) go from left to right. A matrix is in reduced REF if each pivot has only zeros in its column.
+
+\paragraph{Example.} Let's say we have the following system, which we write in matrix-vector form:
+\begin{equation*}
+	\left\{\begin{aligned}
+		x_1 &- x_2 &+ 2x_3 &= 1 \\
+		-2x_1 &+ 2x_2 &- 3x_3 &= -1 \\
+		-3x_1 &- x_2 &+ 2x_3 &= -3 \\
+	\end{aligned}\right.
+\end{equation*}
+% \begin{equation*}
+% 	\begin{bmatrix}
+% 		1 & -1 & 2 \\
+% 		-2 & 2 & -3 \\
+% 		-3 & -1 & 2 \\
+% 	\end{bmatrix}
+% 	\begin{bmatrix}
+% 		x_1 \\ x_2 \\ x_3
+% 	\end{bmatrix}
+% 	=
+% 	\begin{bmatrix}
+% 		1 \\ -1 \\ -3
+% 	\end{bmatrix}
+% \end{equation*}
+To keep track of operations, we put the matrix in augmented form by appending $b$, and then perform operations to convert it to REF: $r_2' = r2 + 2r_1 \rightarrow r_3' = r_3 + 3r_1 \rightarrow \text{swap } r_2, r_3$.
+\begin{equation*}
+	\begin{bmatrix}[ccc|c]
+		1 & -1 & 2 & 1 \\
+		-2 & 2 & -3 & -1 \\
+		-3 & -1 & 2 & -3 \\
+	\end{bmatrix}
+	\rightarrow
+	\begin{bmatrix}[ccc|c]
+		1 & -1 & 2 & 1 \\
+		0 & -4 & 8 & 0 \\
+		0 & 0 & 1 & 1 \\
+	\end{bmatrix}
+\end{equation*}
+We can then create simpler equations:
+\begin{equation*}
+	\begin{bmatrix}
+		1 & -1 & 2 \\
+		0 & -4 & 8 \\
+		0 & 0 & 1 \\
+	\end{bmatrix}
+	\begin{bmatrix}
+		x_1 \\ x_2 \\ x_3
+	\end{bmatrix}
+	=
+	\begin{bmatrix}
+		1 \\ 0 \\ 1
+	\end{bmatrix}
+	\rightarrow
+	\left\{\begin{aligned}
+		x_1 &- x_2 	&+ x_3 	&= 1 \\
+				&- 4x_2 &+ 8x_3 &= 0 \\
+				& 			& x_3 	&= 1 \\ 
+	\end{aligned}\right.
+\end{equation*}
+
+A matrix is singular if it has a row of all zeros---then it has many or no solutions. 
+%We can use Gauss-Jordan to make our job easier:
+% If Gaussian Elimination results in a row of all zeros in the augmented matrix, there are multiple solutions. If all but the last entry of a row is zero, that corresponds to an impossible equation and therefore there are no solutions. In either case, the matrix is \emph{singular}.
+
+% We can also use Gauss-Jordan elimination to convert our matrix to \emph{reduced} row echelon form by multiplying all rows so that their pivot is 1, then adding and subtracting to zero out entries above each pivot.
+% \begin{equation*}
+% 	\begin{bmatrix}[ccc|c]
+% 		1 & -1 & 2 & 1 \\
+% 		0 & -4 & 8 & 0 \\
+% 		0 & 0 & 1 & 1 \\
+% 	\end{bmatrix}
+% 	\rightarrow
+% 	\begin{bmatrix}[ccc|c]
+% 		1 & 0 & 0 & 1 \\
+% 		0 & 1 & 0 & 2 \\
+% 		0 & 0 & 1 & 1 \\
+% 	\end{bmatrix}
+% \end{equation*}
+
+\section{Operations on Vectors}
+% Chapter 3.
+\subsection{Permutations}
+A permutation is a function that changes the order of elements in a vector. In matrix form, it has a single 1 in each row and column and zeros elsewhere.
+%This can be represented as a matrix that has exactly one 1 in each row and each column and zeros everywhere else. A permutation matrix can be computed as $A^\pi_{ij} = \mathbf{1}_{\pi(j)==i}$. For each column $i$, this places a 1 in the row corresponding to the destination $\pi(i)$.
+Applying a permutation matrix preserves length and relative angle between vectors, and if $A$ is a permutation matrix then $A^{-1} = A^T$.
+
+\subsection{Rotation}
+To rotate a two-dimensional vector $x$ by an angle $\theta$, we can use the matrix below. Conveniently, $R_\theta^{-1} = R_{-\theta} = R_\theta^T$ (and this holds in higher dimensions):
+\begin{equation*}
+	R_\theta = 
+	\begin{bmatrix}
+		\cos \theta & -\sin \theta \\
+		\sin \theta & \cos \theta \\
+	\end{bmatrix}
+	\quad
+	R_\theta^{-1} = R_{-\theta} =
+	\begin{bmatrix}
+		\cos \theta & \sin \theta \\
+		-\sin \theta & \cos \theta \\
+	\end{bmatrix}
+\end{equation*}
+
+\subsection{Projection}
+We can project a point onto a line by minimizing the distance to the line, i.e. $\text{proj}_l(a) = \arg\min_{b \in l} \| a - b \|$. To do this more easily, we can rotate the line to be on the $x$ axis and zero the $y$ coordinate. With $D = \begin{smallmatrix} 1 & 0 \\ 0 & 0 \\ \end{smallmatrix}$, a matrix that projects onto a line with angle $\theta$ is then $P = R_\theta D R_{-\theta}$, where $Pv$ gives the projection. Note that a projection matrix cannot have an inverse and $P^2 = P$.
+
+\[ \text{proj}_w v = \frac{v \cdot w}{\|w\|^2}w \]
+
+\subsection{Reflection}
+A reflection across a line $l$ can be expressed as $2(b-a) + a$, where $b$ is the closest point on $l$ to $a$. Since $2(b-a)+a = 2b - a$, we can write this as a matrix product with $2P-I$. A reflection across a line with angle $\theta$ can also be written as:
+\begin{equation*}
+	\begin{bmatrix}
+		\cos 2\theta & \sin 2\theta \\
+		\sin 2\theta & -\cos 2\theta \\
+	\end{bmatrix}
+\end{equation*}
+
+\section{Vector Space}
+A vector space is a set $V$ on which addition and scaling are closed: $\forall v, w \in V, v+w \in V$ and $\forall v \in V, \alpha \in \R, \alpha v \in V$. If $S$ and $V$ are vector spaces, then $S \subseteq V$ is also a subspace.
+
+\begin{compactitem}
+	\item If $S_1$ and $S_2$ are subspaces then $S = S_1 \cap S_2$ is too.	
+	\item $S = S_1 + S_2$ is too (NOT union).
+\end{compactitem}
+
+\subsection{Columnspace}
+The columnspace of a matrix is the span of its $n$ columns, where the span of a set of vectors is the set of all linear combinations of vectors in the set. If $A \in \R^{m \times n}$, then $C(A) \in \R^m$.
+
+Given a matrix $A$, a basis for the columnspace of $A$ is given by the columns corresponding to the pivots in $rref(A)$.
+
+\subsection{Nullspace}
+The nullspace of $A$ is $N(A) = \{x | Ax=0\}$.
+\begin{compactitem}
+\item If $B$ is square and invertible, then $N(A) = N(BA)$.
+\item For any $B$, if $A = BA'$ then $N(A') \subseteq N(A)$.
+\end{compactitem}
+
+To find the nullspace of a matrix, we can take advantage of the fact that $N(A) = N(BA)$ if $B$ is invertible. We can reduce $A$ to rref, then form equations from $R$ and write the vector in terms of the free variables.
+
+% TODO: examples
+
+\subsection{Generators and Bases}
+A set of vectors $\mathcal{V} \subseteq \mathcal{S}$ \emph{generates} a subspace $\mathcal{S}$ iff every vector in $\mathcal{S}$ can be written as a linear combination of vectors in $\mathcal{V}$. If the vectors in $\mathcal{V}$ are linearly independent, then $\mathcal{V}$ is a \emph{basis} for $\mathcal{S}$. All bases have the same cardinality---the dimension of the subspace.
+
+
+% subspaces
+% subspace projection
+
+% TODO
+% - Nullspace, Columnspace example
+% Gram-Schmidt? 
+
+\subsection{Projections}
+For a subspace $V$ defined by orthonormal basis vectors $\{v_1, \ldots v_i\}$, we can compute $proj_V x = \sum_{i=1}^{k} (x\cdot v_i)v_i$. Expanding this:
+\[ proj_V x = \sum_{i=1}^{k} (x\cdot v_i)v_i = \sum_{i=1}^{k} v_i(v_i^Tx) = (\sum_{i=1}^{k} v_iv_i^T)x \]
+We can then equivalently define $P = \sum_{i=1}^k v_i v_i^T = VV^T$, where $V = [v_1 \ldots v_k]$. Then, $proj_V x = VV^T x$.
+
+Note that the rank of $P$ is equal to the dimension of the subspace.
+
+\subsection{Orthogonality}
+Two subspaces can be orthogonal, which means that $\forall v \in V, \forall w \in W, v\cdot w = 0$ (i.e. all vectors are orthogonal). Given $V \in \R^n$, its orthogonal complement $V^\bot$ is the set of vectors that are orthogonal to all $v \in V$. Importantly, $V^\bot$ is a subspace.
+\begin{compactitem}
+	\item $dim(V) + dim(V^\bot) = n$ (where $V \in \R^n$).	
+	\item $(V^\bot)^\bot = V$
+\end{compactitem}
+If $V$ and $W$ are orthogonal complements of each other, they form an orthogonal decomposition and every vector $x \in R^n$ can be written uniquely as $x = v + w$ where $v \in V, w \in W, v\cdot w = 0$.
+
+\subsection{Matrix Decomposition}
+$N(A)$ and $C(A^T) \in \R^n$ are orthogonal complements of each other, as are $C(A) \in \R^m$ and $N(A^T) \in \R^m$.
+
+For a matrix  $A \in \R^{m \times n}$ with $rank(A) = m$, we can decompose a point $x$ into these two subspaces:
+\begin{compactitem}
+	\item $P = A^T(AA^T)^{-1}A$ is the orthogonal projection onto $C(A^T)$
+	\item $Q = I - A^T(AA^T)^{-1}A$ is the projection onto $N(A)$.
+\end{compactitem}
+Notice that $P^2 = P$ and $P + Q = I$.
+
+\section{Equivalences}
+\subsection{Tall Matrices $(A \in \R^{m\times n}, m \geq n)$}
+\begin{compactenum}
+\item Columns of $A$ are LI
+\item If solvable, $Ax=b$ has a unique solution
+\item $A$ has a left inverse
+\item $N(A) = \{0\}$
+\item $\text{rank}(A) = n$ (this is called \textquote{full column rank})
+\end{compactenum}
+
+\subsection{Wide Matrices $(A \in \R^{m\times n}, m \leq n)$}
+\begin{compactenum}
+\item Rows of $A$ are LI
+\item $Ax=b$ is solvable for every $b$
+\item $A$ has a right inverse
+\item $C(A) = \R^m$
+\item $\text{rank}(A) = m$ (this is called \textquote{full row rank})
+\end{compactenum}
+
+\subsection{Square Matrices $(A \in \R^{n\times n})$}
+\begin{compactenum}
+\item Rows of $A$ are LI
+\item Columns of $A$ are LI
+\item $Ax=b$ always has a unique solution
+\item $A$ is invertible (has a left and a right inverse)
+\item $N(A) = \{0\}$
+\item $C(A) = \R^n$
+\item $\text{rank}(A) = n$ (this is called \textquote{full rank})
+\item $\det A \neq 0$
+\end{compactenum}
+
+% TODO: make this more compact
+\section{Determinant}
+The determinant of a square matrix, geometrically, gives the ratio between the \emph{volume} of a set of points before and after application of the matrix.
+\begin{compactitem}
+	\item Rotations preserve the determinant
+	\item A matrix is invertible/nonsingular iff $\det \neq 0$.
+	\item For square $A, B$, $\det(AB) = \det(A) \det(B)$.
+	\item $\det(A+B) \neq \det(A) + \det(B)$.
+	\item $\det(A) = \det (A^T)$
+	\item For a triangular (or diagonal) matrix, $\det A$ is the product of the diagonal.
+	\item For a block triangular matrix, such as $\begin{smallmatrix}B & C \\ 0 & D\end{smallmatrix}$, $\det A = \det(B) \det(D)$.
+	\item Swapping rows negates, adding rows preserves. Multiplying row by $c$ multiplies by a factor of $c$.
+\end{compactitem}
+
+We can also compute the determinant using cofactor expansion. Where $\text{sub}(A, i, j)$ gives $A$ except for row $i$ and column $j$, and for any row $i$ (or column, via $A^T$):
+\[ \det A = \sum_{j=1}^n (-1)^{i + j} A_{ij} \det(\text{sub(A, i, j)}) \]
+
+\section{Least Squares}
+% A system $Ax=b$ can be overdetermined (more (LI) equations than variables), and thus may not have a soltion, or underdetermined, and may have many solutions. If $A$ is tall with LI columns it is overdetermined and if wide with LI rows then underdetermined. The following formula for a solution minimizes the error $\| Ax-b \|^2$ in the overdetermined case, or the norm $\|x\|^2$ in the underdetermined case. In the determined case, simplifies to yield the exact solution.
+For $Ax = b$, the following minimizes the error if overdetermined, or the norm if underdetermined.
+\[ x^* = (A^T A)^{-1} A^T b\]
+
+Sometimes, we care about the size of $x$, and want to instead minimize $\|Ax-b\|^2 + \lambda \|x\|^2$, where $\lambda$ is a regularization parameter. $x^* = (A^T A + \lambda I)^{-1} A^T b$ always exists and gives this.
+
+\section{Singular Value Decomposition}
+For any matrix $A \in \R^{n\times m}$, we can write:
+\[ A = U\Sigma V^T = \sum_{i=1}^r \sigma_i u_i v_i^T\]
+Where $U \in \R^{n \times n} = [v_1\ldots v_n]$ and $V \in \R^{m \times n} = [v_1 \ldots v_m]$ are orthogonal matrices (orthonormal columns) and $\Sigma \in \R^{n \times m}$ is a rectangular matrix with $\sigma_1, \sigma_2, \ldots, \sigma_r, \sigma_{r+1}, \ldots$ along the main diagonal. These $\sigma_i$ are in decreasing order up to some $\sigma_r$, and then are all zero.
+
+The $\sigma_i$ are singular values and $u_i$ and $v_i$ are singular vectors. 
+% Since $U$ and $V$ are orthonormal, multiplying one onto a vector does not change its length, and since $\Sigma$ is diagonal it does not rotate a vector. 
+We can think of $U\Sigma V^T x$ as first rotating $x$ by $V^T$, then scaling it by $\Sigma$, and finally rotating it by $U$.
+
+\begin{compactitem}
+\item $\text{rank}(A)$ is the number of nonzero singular values.	
+\item $u_1, \ldots, u_r$ are an orthonormal basis for $C(A)$.
+\item $v_{r+1}, \ldots, v_m$ are an orthonormal basis for $N(A)$.
+\item If $A = U\Sigma V^T$, then $A^T = (U\Sigma V^T)^T = V\Sigma U^T$
+\end{compactitem}
+
+\subsection{Pseudoinverse}
+If $A$ is square and invertible (full column rank), then $A^{-1} = V\Sigma^{-1}U^T$. We can derive this: $A^{-1} = (U\Sigma V^T)^{-1} = (V^T)^{-1} \Sigma^{-1} U^{-1}$ and since $U$ and $V^T$ are orthogonal, $A^{-1} = V\Sigma^{-1} U^T$. We can extend this for non-invertible matrices, defining the \emph{pseudoinverse}:
+\[ A^+ = \sum_{i=1}^r \sigma_i^{-1} v_i u_i^T \]
+
+\begin{compactitem}
+	\item $AA^+ = \sum_{i=1}^r u_i u_i^T$ gives the projector onto $C(A)$.	
+	\item $A^+A = \sum_{i=1}^r v_i v_i^T$ gives the projector onto $N(A)^\bot$.	
+\end{compactitem}
+The following two properties uniquely define it:
+\begin{compactitem}
+	\item $AA^+ A = A$ and $A^+ A A^+ = A^+$. 
+	\item $AA^+$ and $A^+ A$ are symmetric.
+\end{compactitem}
+
+% SVD of A^T A and AA^T
+
+\subsection{Operator Norm}
+The operator norm of $A \in \R^{m \times n}$ is the maximum norm result of multiplying by a unit vector:
+\[ \| A \| := \max_{x \in \R^n, \|x\| = 1} \|Ax\| \]
+
+\begin{compactitem}
+\item $\|A\|$ is equal to the largest singular value of $A$.
+\item If $P$ and $Q$ are orthogonal, then $\|PA\| = \|AQ\| = \|A\|$.
+\item $|Ax| \leq \| A \| |x|$, $\|AB\| \leq \|A\| \| B \|$
+\end{compactitem}
+
+\subsection{Low Rank Approximation}
+If we want to create a $k$-rank matrix $C$ that approximates $B = \sum_{i=1}^{r} \sigma_i u_i v_i^T$ such that $\| B - C \|$ is minimized, that minimum is $\sigma_{k+1}$ and it is achieved by the truncated SVD:
+\[ C = \sum_{i=1}^k \sigma_i u_i v_i^T \]
+
+\subsection{Principal Component Analysis}
+For analyzing datasets, it can be useful to find a projection onto a lower-dimensional space that maximizes the spread of the data. That is, finding $c_1, \ldots c_k$ such that:
+\[ \max_{c_1, \ldots, c_k} \frac{1}{p} \sum_{i=1}^{p} \| C^T y_i \|^2 \]
+Where $C = [c_1\, \ldots \, c_k]$ and $c_1, \ldots c_k$ are orthonormal. The best set of vectors is $u_1, \ldots, u_k$ from the SVD of the data.
+
+This basis also minimizes the reconstruction error $\frac{1}{p} \sum_{i=1}^p \| y_i - \hat{y_i}\|^2$ where $\hat{y_i}$ is the projection onto the subspace defined by the $c_i$s. 
+
+
+% Eigenvalues/Vectors
+%% Trace = sum of eigenvals
+%% Det = product of eigenvals
+%% shortcut for 2x2 char poly
+
+\section{Eigenvalues and Eigenvectors}
+For a square $n \times n$ matrix $A$, we can find eigenvalues $\lambda$ and corresponding eigenvectors $x \in \R^n$ where $Ax = \lambda x$.
+To find the eigenvalues, we find the roots of the characteristic polynomial, given by $\det(A - \lambda I)$, which is degree $n$. Given an eigenvalue, we can find the corresponding eigenvector by finding a vector in the nullspace of $A - \lambda I$, i.e. a vector for which the above holds.
+
+Note that for $2 \times 2$ $A$, $p(\lambda) = \lambda^2 - \text{Tr}(A)\lambda + \det(A)$ and $\lambda = \frac{1}{2}\left(\text{tr(A)} \pm \sqrt{\text{tr}(A)^2 - 4\det(A)}\right)$.
+
+\begin{compactitem}
+\item $\lambda$ is an eigenvalue of $A \iff Av = \lambda v \iff (\lambda I - A)v = 0 \iff N(\lambda I - A) \neq \{0\} \iff \lambda I - A$ not invertible $\iff \det(\lambda I - A) = 0 \iff p(\lambda) = 0$.
+\item $\det A = \prod \lambda_i$, $\text{tr}(A) = \sum \lambda_i$
+\end{compactitem}
+
+\subsection{Diagonalization}
+For a matrix $A \in \R^{n \times n}$, it can sometimes be written as $A = TDT^{-1}$, where $D = \text{Diagonal}(\lambda_1, \ldots, \lambda_n)$, and $T = [v_1 \cdots v_n]$ where $v_i$ is the eigenvector associated with $\lambda_i$.
+
+$A$ is diagonalizable iff every eigenvalue has the same algebraic multiplicity and geometric multiplicity. $\lambda$ has alg. mult. $k$ if $p(t)$ has a factor $(t-\lambda)^k$, and $\lambda$ has geom. mult. $K$ if $\dim N(A - \lambda I) = K$.
+
+\begin{compactitem}
+\item If $A$ is diagonalizable s.t. $A = TDT^{-1}$ as above, then $A^k = TD^kT^{-1}$.
+\item For a polynomial or convergent power series, $q(A) = TD_qT^{-1}$ where $D_q = \text{Diagonal}(q(\lambda_1), \ldots)$.
+\item Cayley-Ham.: $p(\lambda) = \det (A - \lambda I) \implies p(A) = 0$.
+\end{compactitem}
+
+\section{Symmetric Matrices}
+A square matrix is symmetric if $A = A^T$. Then:
+
+\begin{compactitem}
+\item The eigenvalues of $A$ are real.
+\item The eigenvectors of $A$ can be chosen to be orthogonal.
+\item $A$ is diagonalizable, and $A = TDT^T$.
+\item The nonzero singular values of $A$ are the square root of the eigenvalues of $MM^T$ or $M^T M$.
+\end{compactitem}
+
+\subsection{Positive (Semi-)Definite}
+A symmetric matrix $A \in \mathbb{R}^{n \times n}$ is PSD if $x^T A x \geq 0 \forall x \in \mathbb{R}^n$. $A$ is positive definite if $x^T A x > 0$ for nonzero $x$. A matrix is PSD if:
+
+\begin{compactitem}
+	\item All eigenvalues are $\geq 0$ ($> 0$ for PD). For $2\times 2$, it is equivalent that $\text{trace}(A) \geq 0$ and $\det A \geq 0$.	
+	\item It is the sum of two PSD matrices.
+	\item It can be expressed as $AA^T$ for $A \in \mathbb{R}^{n \times m}$.
+\end{compactitem}
+
+
+\section{Power Method}
+By choosing a random vector and repeatedly applying $A$ to it and normalizing the result, we will converge on the largest eigenvector $x_k$ and eigenvalue $x_k A x_k$. The convergence rate depends on the spectral gap $\tfrac{|\lambda_1|}{|\lambda_2|}$. We apply $x_{k+1} = \frac{Ax_k}{\|Ax_k\|}$.
+
+\section{Linear Dynamical Systems}
+If we have a system $x_k = Ax_{k-1}$, equivalently $x_k = A^k x_0$, then for large $k$ the system evolves at $\lambda_1^k$ where $\lambda_1$ is the largest eigenvalue.
+
+\section{Linear ODEs}
+For a system of linear ordinary differential equations:
+\[ \frac{d}{dt} x(t) = Ax(t), \quad x(0) = x_0 \]
+The solution is $x(t) = e^{At}x_0$. We define the matrix exponential equivalently to the scalar exponential:
+\[ e^{At} = I + At + \frac{A^2 t^2}{2} + \frac{A^3 t^3}{3!} + \cdots \]
+\[ = I + VDV^{-1}t + \frac{VD^2V^{-1} t^2}{2!} + \cdots = V(I + Dt + \frac{D^2t^2}{2!} + \cdots)V^{-1} \]
+
+\section{Convexity}
+A \emph{set} $C$ is convex if it contains the line segment between any two points in the set:
+
+\[ ta + (1-t)b \in C \forall a, b \in C,\, \forall t \in [0, 1] \]
+
+\begin{compactitem}
+	\item If $C_1, C_2$ are convex, then $C_1 \cap C_2$ is convex.
+	\item If $C$ is convex and $\phi$ is a linear ($Ax$) or affine ($Ax + b$) map, then $\phi(C)$ is convex.
+\end{compactitem}
+
+\subsection{Convex Functions}
+A function $f$ is convex if the function is below the chord between any two points:
+\[ f(ta + (1-t)b) \leq t f(a) + (1-t) f(b) \forall t \in [0, 1] \]
+$f(x)$ is convex if:
+\begin{compactitem}
+\item $f(x) = c_1 f_1(x) + c_2 f_2(x)$ with $f_1, f_2$ convex.
+\item $f(x) = \max \{f_1(x), \ldots, f_n(x)\}$ with $f_i$ convex.
+\end{compactitem}
+
+If $f(x)$ is convex, then the following are convex sets:
+\begin{compactitem}
+\item $S_\gamma = \{x \in \mathbb{R}^n: f(x) \leq \gamma\}$
+\item $\text{epi} f = \{(x,y): x \in \mathbb{R}^n, y \in \mathbb{R}: f(x) \leq y\}$
+	
+\end{compactitem}
+
+$f$ is convex if $f'' \geq e  0$ or $\textbf{H}_f$ PSD. For convex $f$, local minima are global so $\nabla f=0$ is a minimum.
+
+\section{Gradient \& Hessian}
+The gradient of a function $f(x_1, x_2, \ldots, x_d)$ is the $d$-dimensional vector with $\pd{f}{x_i}$ at each entry.
+% \[ \begin{bmatrix}
+% 	\pd{}{x_1} f(x_1, \ldots, x_d) \\ 
+% 	\pd{}{x_2} f(x_1, \ldots, x_d) \\
+% 	\vdots \\
+% 	\pd{}{x_d} f(x_1, \ldots, x_d) \\
+% \end{bmatrix} \]
+The Hessian $\mathbf{H}_f$ is the $d \times d$ matrix with $\pd{f}{x_i x_j}$ at each $i, j$.
+
+\section{Quadratic Functions}
+Quadratic functions are of the form:
+\[ f(x) = x^T A x + b^T x \]
+Then, $\nabla f = 2Ax + b$ and $H(x) = 2A$. So, if $A$ is PSD then $f$ is convex. It is always possible to write $A$ as a symmetric matrix.
+
+\subsection{Quadratic Programming}
+If we have a quadratic program like $\min \frac{1}{2}x^T P x + q^T x$, we can solve it by setting the gradient equal to zero. If we add an equality constraint $Ax = b$, then we can solve:
+\[ \begin{bmatrix}P & A^T \\ A & 0 \\ \end{bmatrix} \begin{bmatrix}x \\ c\end{bmatrix} = \begin{bmatrix}-q \\ b\end{bmatrix} \]
+And the solution $x$ will be optimal.
+
+
+\section{Gradient Descent}
+Gradient descent repeatedly applies the following:
+\[ x_{k + 1} = x_k - \gamma \nabla f(x_k) \]
+
+If $f$ is a convex function with $\nabla^2 f = H$, and $\lambda_1 \geq \cdots \geq \lambda_n \geq 0$:
+\begin{compactitem}
+\item If $f$ is smooth and convex, with $\lambda_i \leq L$, then should choose $\gamma = \frac{1}{L}$. If $f$ is quadratic, then it converges for any $0 < \gamma < \frac{2}{\lambda_1}$.
+	This converges according to $f(x_k) - f(x^*) \leq \frac{L}{2k}\|x_0 - x^*\|^2$.
+\item If $f$ is smooth and strongly convex, the best step size is $\gamma = \frac{2}{m + L}$ and we define $Q = \frac{L}{m}$. If $f$ is quadratic, $m = \lambda_n$, $L = \lambda_1$.
+	This converges according to $f(x_k) - f(x^*) \leq \frac{L}{2} \left(\frac{Q - 1}{Q + 1}\right)^{2k} \|x_0 - x^*\|^2$: much faster.
+\end{compactitem}
+
+
+\end{multicols*}
+
+\end{document}
